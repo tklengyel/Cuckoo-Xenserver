@@ -64,13 +64,13 @@ class XenServer(Machinery):
 		
 		self._revert(uuid)	
 		
-		log.debug("Starting vm %s" % uuid)
+		log.debug("Resuming vm %s" % uuid)
 		# Start the VM
 		vm = self.session.xenapi.VM.get_by_uuid(uuid)
 		try:
-			self.session.xenapi.VM.start(vm, False, True)
+			self.session.xenapi.VM.resume(vm, False, True)
 		except:
-			raise CuckooMachineError("XenServer: Could not start VM %s" % (uuid))
+			raise CuckooMachineError("XenServer: Could not resume VM %s" % (uuid))
 
 	def stop(self, uuid):
 		"""Stops a virtual machine.
@@ -102,7 +102,6 @@ class XenServer(Machinery):
 			self.session.xenapi.VM.revert(self.session.xenapi.VM.get_by_uuid(snapshot))
 		except:
 			raise CuckooMachineError("XenServer: Could not revert VM %s to snapshot %s" % (uuid,snapshot))
-		log.debug("Starting vm %s" % uuid)
 
 	def _is_running(self, uuid):
 		vm = self.session.xenapi.VM.get_by_uuid(uuid)
